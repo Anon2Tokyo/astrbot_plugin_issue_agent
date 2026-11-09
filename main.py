@@ -73,9 +73,9 @@ class IssueAgentPlugin(Star):
         """将用户的编程需求、Bug 修复或新功能开发任务分派给云端 Coding Agent（如 Google Jules 等）。
 
         Args:
-            task_title: 任务简明标题，例如 '为 AstrBot 开发天气查询插件' 或 '修复内存泄漏 Bug'
-            task_description: 详细的需求描述、实现步骤要求或技术指引
-            target_repo: 目标 GitHub 仓库 (owner/repo)，若用户未明确指定仓库名则留空使用默认仓库
+            task_title (str): 任务简明标题，例如 '为 AstrBot 开发天气查询插件' 或 '修复内存泄漏 Bug'
+            task_description (str): 详细的需求描述、实现步骤要求或技术指引
+            target_repo (str): 目标 GitHub 仓库 (owner/repo)，若用户未明确指定仓库名则留空使用默认仓库
         """
         sender_id = str(event.get_sender_id())
         if not self.is_admin(sender_id):
