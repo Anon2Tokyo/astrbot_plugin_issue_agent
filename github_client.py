@@ -1,5 +1,6 @@
 """GitHub REST API client for astrbot_plugin_issue_agent."""
 
+from datetime import datetime, timezone
 import logging
 from typing import Any
 
@@ -142,3 +143,53 @@ class GitHubClient:
                     if issue_source.get("pull_request"):
                         prs.append(issue_source)
             return prs
+
+    async def get_rate_limit(self) -> dict[str, Any]:
+        """Fetch the rate limit status for the current token or IP.
+
+        Calls GitHub REST API: GET /rate_limit
+
+        Returns:
+            Dictionary containing rate limit details parsed from GitHub API:
+            - 'resources': raw resources dictionary (core, search, graphql, etc.)
+            - 'rate': raw rate dictionary
+            - 'core': parsed summary for core quota (limit, remaining, reset, used, reset_time)
+            - 'search': parsed summary for search quota (limit, remaining, reset, used, reset_time)
+            - 'graphql': parsed summary for graphql quota (limit, remaining, reset, used, reset_time)
+        """
+        url = f"{self.base_url}/rate_limit"
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(url, headers=self.headers)
+            if resp.status_code >= 400:
+                raise RuntimeError(
+                    f"Failed to fetch rate limit: {resp.text}"
+                )
+            data = resp.json()
+
+            def _parse_resource(res_data: dict[str, Any] | None) -> dict[str, Any]:
+                if not res_data:
+                    return {}
+                reset_ts = res_data.get("reset", 0)
+                reset_iso = (
+                    datetime.fromtimestamp(reset_ts, tz=timezone.utc).isoformat()
+                    if reset_ts
+                    else None
+                )
+                return {
+                    "limit": res_data.get("limit", 0),
+                    "remaining": res_data.get("remaining", 0),
+                    "reset": reset_ts,
+                    "reset_time": reset_iso,
+                    "used": res_data.get("used", 0),
+                }
+
+            resources = data.get("resources", {})
+            rate = data.get("rate", {})
+
+            return {
+                "resources": resources,
+                "rate": rate,
+                "core": _parse_resource(resources.get("core") or rate),
+                "search": _parse_resource(resources.get("search")),
+                "graphql": _parse_resource(resources.get("graphql")),
+            }
