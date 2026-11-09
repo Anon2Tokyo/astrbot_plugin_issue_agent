@@ -1,0 +1,7 @@
+name: astrbot_plugin_issue_agent
+display_name: Issue Agent 协同桥
+desc: 通过自然语言与人机双向交互，将 IM 消息自动转化为 GitHub Issue 并调度云端 AI Coding Agent（如 Google Jules、Devin 等），支持权限控制、后台异步跟踪、人机交互决策回传与 Bot 人设转述
+version: v1.0.0
+author: soyorin
+astrbot_version: ">=0.0.1"
+repo: https://github.com/Anon2Tokyo/astrbot_plugin_issue_agent

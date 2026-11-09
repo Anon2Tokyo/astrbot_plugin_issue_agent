@@ -1,0 +1,50 @@
+{
+  "enabled": {
+    "description": "插件总开关",
+    "type": "bool",
+    "default": true,
+    "hint": "是否启用 Issue Agent 协同桥"
+  },
+  "github_token": {
+    "description": "GitHub 个人访问令牌 (PAT)",
+    "type": "string",
+    "default": "",
+    "hint": "需要具备 repo 读写权限的 GitHub Token，用于创建 Issue 和追加回复"
+  },
+  "default_repo": {
+    "description": "默认目标 GitHub 仓库 (owner/repo)",
+    "type": "string",
+    "default": "",
+    "hint": "例如 Anon2Tokyo/my-project，若命令中未特别指定则提交至此仓库"
+  },
+  "agent_label": {
+    "description": "触发云端 Agent 的标签 (Label)",
+    "type": "string",
+    "default": "jules",
+    "hint": "默认为 jules，可根据后端 Agent 调整为 devin、copilot、sweep 等"
+  },
+  "admin_ids": {
+    "description": "管理员用户 ID 列表（英文逗号分隔）",
+    "type": "string",
+    "default": "",
+    "hint": "允许调度 Agent 的用户 ID（如管理员 QQ 号），多个 ID 用逗号分隔。留空则仅允许控制台指令"
+  },
+  "poll_interval": {
+    "description": "Issue 状态与评论轮询间隔（秒）",
+    "type": "int",
+    "default": 20,
+    "hint": "后台轮询 GitHub Issue 动态的频率，建议 15~60 秒之间"
+  },
+  "enable_persona_rewrite": {
+    "description": "是否启用 Bot 人设转述进度",
+    "type": "bool",
+    "default": true,
+    "hint": "启用后，Agent 的技术性进度和提问将先经由 AstrBot 主 LLM 按角色人格润色后再推送到群聊"
+  },
+  "auto_at_admin": {
+    "description": "重要进展和决策是否自动 @ 管理员",
+    "type": "bool",
+    "default": true,
+    "hint": "当检测到需要人工决策或任务完成提 PR 时，在群里自动 @ 触发该任务的管理员"
+  }
+}
